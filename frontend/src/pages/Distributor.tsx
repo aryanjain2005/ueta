@@ -28,3 +28,4 @@ const Distributor: React.FC = () => {
 }
 
 export default Distributor
+export default Distributor

@@ -26,4 +26,4 @@ const Category: React.FC = () => {
   );
 };
 
-export default Category;
+export default Category

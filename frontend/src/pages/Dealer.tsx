@@ -29,3 +29,4 @@ const Dealer: React.FC = () => {
 }
 
 export default Dealer
+export default Dealer
