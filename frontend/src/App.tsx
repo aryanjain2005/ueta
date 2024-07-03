@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Navbar from './pages/Navbar'
 import Dealer from './pages/Dealer'
@@ -10,20 +10,19 @@ import './App.css'
 const App: React.FC = () => {
   return (
     <>
-    <BrowserRouter>
-    <Navbar/>
-    <Routes>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
           <Route index element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/brand" element={<Brand />} />
           <Route path="/distributor" element={<Distributor />} />
           <Route path="/dealer" element={<Dealer />} />
           <Route path="/category" element={<Category />} />
-    </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
     </>
-    
-  );
-};
+  )
+}
 
 export default App

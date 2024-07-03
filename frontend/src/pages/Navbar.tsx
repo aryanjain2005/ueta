@@ -1,38 +1,41 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link} from 'react-router-dom';
-import Logo from '../assets/Logo.jpg';
+import React, { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import Logo from '../assets/Logo.jpg'
 
 const Navbar: React.FC = () => {
-  const [showMenu, setShowMenu] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [showMenu, setShowMenu] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false)
       }
-    };
+    }
 
     // Add event listener when the dropdown is shown
     if (showMenu) {
-      document.addEventListener('click', handleOutsideClick);
+      document.addEventListener('click', handleOutsideClick)
     } else {
       // Remove event listener when the dropdown is hidden
-      document.removeEventListener('click', handleOutsideClick);
+      document.removeEventListener('click', handleOutsideClick)
     }
 
     // Cleanup function to remove event listener when the component unmounts
     return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, [showMenu]);
+      document.removeEventListener('click', handleOutsideClick)
+    }
+  }, [showMenu])
 
   const toggleMenu = (event?: React.MouseEvent) => {
     if (event) {
-      event.stopPropagation();
+      event.stopPropagation()
     }
-    setShowMenu((prevState) => !prevState);
-  };
+    setShowMenu((prevState) => !prevState)
+  }
 
   return (
     <>
@@ -84,62 +87,66 @@ const Navbar: React.FC = () => {
           >
             <div className="px-2 pt-2 pb-3 z-30">
               <>
-
-                      <NavItem to="/category" toggleMenu={toggleMenu}>
-                        Category
-                      </NavItem>
-                      <NavItem to="/brand" toggleMenu={toggleMenu}>
-                        Brand
-                      </NavItem>
-                      <NavItem to="/dealer" toggleMenu={toggleMenu}>
-                        Dealer
-                      </NavItem>
-                      <NavItem to="/distributor" toggleMenu={toggleMenu}>
-                        Distributor
-                      </NavItem>
+                <NavItem to="/category" toggleMenu={toggleMenu}>
+                  Category
+                </NavItem>
+                <NavItem to="/brand" toggleMenu={toggleMenu}>
+                  Brand
+                </NavItem>
+                <NavItem to="/dealer" toggleMenu={toggleMenu}>
+                  Dealer
+                </NavItem>
+                <NavItem to="/distributor" toggleMenu={toggleMenu}>
+                  Distributor
+                </NavItem>
               </>
             </div>
           </div>
         </div>
       </nav>
     </>
-  );
-};
+  )
+}
 
 interface NavItemProps {
-    to?: string;
-    children: React.ReactNode;
-    toggleMenu?: () => void;
-    disabled?: boolean;
-  }
-  
-  const NavItem: React.FC<NavItemProps> = ({ to, children, toggleMenu, disabled = false }) => {
-    const handleClick = () => {
-      if (!disabled && toggleMenu) {
-        toggleMenu();
-      }
-    };
-  
-    if (disabled) {
-      return (
-        <span
-          className="block px-3 py-2 rounded-md text-base font-medium text-white opacity-50 cursor-not-allowed"
-          aria-disabled={disabled}
-        >
-          {children}
-        </span>
-      );
+  to?: string
+  children: React.ReactNode
+  toggleMenu?: () => void
+  disabled?: boolean
+}
+
+const NavItem: React.FC<NavItemProps> = ({
+  to,
+  children,
+  toggleMenu,
+  disabled = false
+}) => {
+  const handleClick = () => {
+    if (!disabled && toggleMenu) {
+      toggleMenu()
     }
-  
+  }
+
+  if (disabled) {
     return (
-      <Link
-        to={to || '#'}
-        onClick={handleClick}
-        className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out"
+      <span
+        className="block px-3 py-2 rounded-md text-base font-medium text-white opacity-50 cursor-not-allowed"
+        aria-disabled={disabled}
       >
         {children}
-      </Link>
-    );
-};
+      </span>
+    )
+  }
 
-export default Navbar;
+  return (
+    <Link
+      to={to || '#'}
+      onClick={handleClick}
+      className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out"
+    >
+      {children}
+    </Link>
+  )
+}
+
+export default Navbar
