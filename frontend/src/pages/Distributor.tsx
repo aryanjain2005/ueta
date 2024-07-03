@@ -7,6 +7,8 @@ const Distributor: React.FC = () => {
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9GCHfZwy5mWTCWhq0yhf5abS2MSODFaO2jA&s',
     'https://www.shutterstock.com/image-photo/young-smiling-business-university-student-260nw-1937739820.jpg',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9GCHfZwy5mWTCWhq0yhf5abS2MSODFaO2jA&s',
+    'https://www.shutterstock.com/image-photo/young-smiling-business-university-student-260nw-1937739820.jpg',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9GCHfZwy5mWTCWhq0yhf5abS2MSODFaO2jA&s',
     'https://www.shutterstock.com/image-photo/young-smiling-business-university-student-260nw-1937739820.jpg'
   ]
 
@@ -27,5 +29,4 @@ const Distributor: React.FC = () => {
   )
 }
 
-export default Distributor
 export default Distributor
