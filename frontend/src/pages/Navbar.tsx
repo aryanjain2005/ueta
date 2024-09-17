@@ -87,8 +87,8 @@ const Navbar: React.FC = () => {
           >
             <div className="px-2 pt-2 pb-3 z-30">
               <>
-                <NavItem to="/category" toggleMenu={toggleMenu}>
-                  Category
+                <NavItem to="/product" toggleMenu={toggleMenu}>
+                  Product
                 </NavItem>
                 <NavItem to="/brand" toggleMenu={toggleMenu}>
                   Brand

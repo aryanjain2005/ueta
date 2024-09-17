@@ -2,7 +2,9 @@
 import { config } from "dotenv";
 import express, { Application } from "express";
 import mongoose from "mongoose";
-// import cors from "cors";
+import brandRoute from "./routes/brand.route";
+import productRoute from "./routes/product.route";
+import cors from "cors";
 import { createServer, Server } from "http";
 
 config({ path: "./.env" });
@@ -23,6 +25,15 @@ mongoose
   .connect(MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch((error: Error) => console.error("MongoDB connection error:", error));
+
+app.use(cors());
+app.use(express.json());
+app.use("/brand", brandRoute);
+app.use("/product", productRoute);
+
+app.get("/hello", (req, res) => {
+  res.send("Hello from the backend!");
+});
 
 http.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

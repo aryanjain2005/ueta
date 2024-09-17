@@ -12,7 +12,12 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': 'http://localhost:3001'
+      '/api': {
+        target: 'http://localhost:5000', // Your backend server URL
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '') // Optional: If your backend doesn't have /api prefix
+      }
     }
   }
 })

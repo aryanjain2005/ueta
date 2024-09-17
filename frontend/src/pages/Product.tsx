@@ -1,53 +1,44 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
-// Define TypeScript interfaces for the brand data
-interface BrandData {
+// Define TypeScript interfaces for the product data
+interface ProductData {
   name: string
   img: string
 }
 
-const Brand: React.FC = () => {
-  // State to hold brand data and form input
-  const [brands, setBrands] = useState<BrandData[]>([])
-  const [newBrandName, setNewBrandName] = useState<string>('')
-  const [newBrandImg, setNewBrandImg] = useState<string>('')
+const Product: React.FC = () => {
+  // State to hold product data and form input
+  const [products, setProducts] = useState<ProductData[]>([])
+  const [newProductName, setNewProductName] = useState<string>('')
+  const [newProductImg, setNewProductImg] = useState<string>('')
 
-  // Fetch brand data from the backend API
+  // Fetch product data from the backend API
   useEffect(() => {
-    const fetchBrands = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get<BrandData[]>('/api/brand/getBrands')
-        setBrands(response.data)
+        const response = await axios.get<ProductData[]>(
+          'http://localhost:5000/product/getProducts'
+        )
+        setProducts(response.data)
       } catch (error) {
-        console.error('Error fetching brand data:', error)
+        console.error('Error fetching product data:', error)
       }
     }
 
-    // Fetch the hello endpoint if needed
-    const fetchHello = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/hello')
-        console.log(response)
-      } catch (error) {
-        console.error('Error fetching hello:', error)
-      }
-    }
-
-    fetchHello()
-    fetchBrands()
+    fetchProducts()
   }, [])
 
   // Handle form submission
-  const handleAddBrand = async (e: React.FormEvent) => {
+  const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault()
 
     try {
       await axios.post(
-        '/api/brand/addBrand',
+        'http://localhost:5000/product/addProduct',
         {
-          name: newBrandName,
-          img: newBrandImg
+          name: newProductName,
+          img: newProductImg
         },
         {
           headers: {
@@ -55,50 +46,52 @@ const Brand: React.FC = () => {
           }
         }
       )
-      // Refresh brand list after adding new brand
-      const response = await axios.get<BrandData[]>('/api/brand/getBrands')
-      setBrands(response.data)
+      // Refresh product list after adding new product
+      const response = await axios.get<ProductData[]>(
+        'http://localhost:5000/product/getProducts'
+      )
+      setProducts(response.data)
       // Clear the form inputs
-      setNewBrandName('')
-      setNewBrandImg('')
+      setNewProductName('')
+      setNewProductImg('')
     } catch (error) {
-      console.error('Error adding new brand:', error)
+      console.error('Error adding new product:', error)
     }
   }
 
   return (
     <div className="flex flex-col p-4">
       <div className="flex flex-wrap -mx-4 mb-4">
-        {brands.map((brand, index) => (
+        {products.map((product, index) => (
           <div key={index} className="w-full md:w-1/2 lg:w-1/4 px-4 mb-4">
             <div className="bg-white p-4 border rounded-md shadow-md">
               <img
-                src={brand.img}
-                alt={`Brand ${index}`}
+                src={product.img}
+                alt={`Product ${index}`}
                 className="w-full h-auto rounded-md"
               />
               <h3 className="mt-2 text-center text-lg font-semibold">
-                {brand.name}
+                {product.name}
               </h3>
             </div>
           </div>
         ))}
       </div>
 
-      <form onSubmit={handleAddBrand} className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Add a New Brand</h2>
+      <form onSubmit={handleAddProduct} className="mt-8">
+        <h2 className="text-xl font-semibold mb-4">Add a New Product</h2>
         <div className="mb-4">
           <label
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Brand Name
+            Product Name
           </label>
           <input
             id="name"
             type="text"
-            value={newBrandName}
-            onChange={(e) => setNewBrandName(e.target.value)}
+            value={newProductName}
+            onChange={(e) => setNewProductName(e.target.value)}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             required
           />
@@ -113,8 +106,8 @@ const Brand: React.FC = () => {
           <input
             id="img"
             type="text"
-            value={newBrandImg}
-            onChange={(e) => setNewBrandImg(e.target.value)}
+            value={newProductImg}
+            onChange={(e) => setNewProductImg(e.target.value)}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             required
           />
@@ -123,11 +116,11 @@ const Brand: React.FC = () => {
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600"
         >
-          Add Brand
+          Add Product
         </button>
       </form>
     </div>
   )
 }
 
-export default Brand
+export default Product
