@@ -4,6 +4,7 @@ import express, { Application } from "express";
 import mongoose from "mongoose";
 import brandRoute from "./routes/brand.route";
 import productRoute from "./routes/product.route";
+import authRoute from "./routes/auth.route";
 import cors from "cors";
 import { createServer, Server } from "http";
 
@@ -30,6 +31,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/brand", brandRoute);
 app.use("/product", productRoute);
+app.use("/auth", authRoute);
 
 app.get("/hello", (req, res) => {
   res.send("Hello from the backend!");
