@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios, { AxiosError } from 'axios'
 
 // Define User interface
@@ -19,6 +19,7 @@ const BrandProduct: React.FC = () => {
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const objectId = query.get('objectId')
+  const navigate = useNavigate()
 
   // State to hold brand/product data, users, products, and related brands
   const [data, setData] = useState<any>(null)
@@ -118,7 +119,9 @@ const BrandProduct: React.FC = () => {
   if (error) {
     return <div>{error}</div>
   }
-
+  const handleUserClick = (id: string) => {
+    navigate(`/Distributor_Dealer?objectId=${id}`) // Navigate with query parameter
+  }
   return (
     <div className="p-4">
       {data ? (
@@ -134,13 +137,25 @@ const BrandProduct: React.FC = () => {
           <h2 className="text-xl mt-4">Distributors</h2>
           <ul>
             {distributors.map((distributor: User) => (
-              <li key={distributor._id}>{distributor.name}</li>
+              <li
+                key={distributor._id}
+                className="cursor-pointer"
+                onClick={() => handleUserClick(distributor._id)}
+              >
+                {distributor.name}
+              </li>
             ))}
           </ul>
           <h2 className="text-xl mt-4">Dealers</h2>
           <ul>
             {dealers.map((dealer: User) => (
-              <li key={dealer._id}>{dealer.name}</li>
+              <li
+                key={dealer._id}
+                className="cursor-pointer"
+                onClick={() => handleUserClick(dealer._id)}
+              >
+                {dealer.name}
+              </li>
             ))}
           </ul>
 

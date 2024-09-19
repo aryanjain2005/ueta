@@ -26,7 +26,6 @@ export const getBrandById = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  console.log("Hello I am here for u");
   const { objectId } = req.params;
 
   try {
