@@ -48,9 +48,7 @@ const DistributorDealer: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/auth/getUserbyId/${objectId}`
-        )
+        const response = await axios.get(`/api/auth/getUserbyId/${objectId}`)
         if (response.status === 200) {
           setUser(response.data.user)
 

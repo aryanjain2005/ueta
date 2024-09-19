@@ -15,6 +15,13 @@ interface Product {
   img: string
 }
 
+interface Brand {
+  _id: string
+  name: string
+  img: string
+  products: Product[]
+}
+
 const BrandProduct: React.FC = () => {
   const location = useLocation()
   const query = new URLSearchParams(location.search)
@@ -22,22 +29,20 @@ const BrandProduct: React.FC = () => {
   const navigate = useNavigate()
 
   // State to hold brand/product data, users, products, and related brands
-  const [data, setData] = useState<any>(null)
+  const [data, setData] = useState<Brand | Product | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [distributors, setDistributors] = useState<User[]>([])
   const [dealers, setDealers] = useState<User[]>([])
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
-  const [relatedBrands, setRelatedBrands] = useState<any[]>([])
+  const [relatedBrands, setRelatedBrands] = useState<Brand[]>([])
   const [dataType, setDataType] = useState<string>('')
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Try to fetch the brand
-        let response = await axios.get(
-          `http://localhost:5000/brand/${objectId}`
-        )
+        let response = await axios.get<Brand>(`/api/brand/${objectId}`)
 
         if (response.status === 200) {
           setData(response.data)
@@ -45,10 +50,10 @@ const BrandProduct: React.FC = () => {
 
           // Fetch related products
           const productIds = response.data.products.map(
-            (product: any) => product._id
+            (product) => product._id
           )
-          const productResponse = await axios.get(
-            `http://localhost:5000/product/multiple`,
+          const productResponse = await axios.get<Product[]>(
+            `/api/product/multiple`,
             {
               params: { ids: productIds.join(',') }
             }
@@ -59,16 +64,16 @@ const BrandProduct: React.FC = () => {
         if (isAxiosError(err) && err.response?.status === 404) {
           // If brand not found, try fetching the product
           try {
-            const productResponse = await axios.get(
-              `http://localhost:5000/product/${objectId}`
+            const productResponse = await axios.get<Product>(
+              `/api/product/${objectId}`
             )
             if (productResponse.status === 200) {
               setData(productResponse.data)
               setDataType('product')
 
               // Fetch related brands
-              const brandResponse = await axios.get(
-                `http://localhost:5000/brand/byProduct/${objectId}`
+              const brandResponse = await axios.get<Brand[]>(
+                `/api/brand/byProduct/${objectId}`
               )
               setRelatedBrands(brandResponse.data)
             }
@@ -91,12 +96,12 @@ const BrandProduct: React.FC = () => {
       }
 
       // Fetch users related to the objectId
-      const userResponse = await axios.get(
-        `http://localhost:5000/auth/byBrandProd/${objectId}?dataType=${dataType}`
+      const userResponse = await axios.get<User[]>(
+        `/api/auth/byBrandProd/${objectId}?dataType=${dataType}`
       )
       const users = userResponse.data
-      setDistributors(users.filter((user: User) => user.role === 'distributor'))
-      setDealers(users.filter((user: User) => user.role === 'dealer'))
+      setDistributors(users.filter((user) => user.role === 'distributor'))
+      setDealers(users.filter((user) => user.role === 'dealer'))
     }
 
     if (objectId) {
@@ -119,9 +124,11 @@ const BrandProduct: React.FC = () => {
   if (error) {
     return <div>{error}</div>
   }
+
   const handleUserClick = (id: string) => {
-    navigate(`/Distributor_Dealer?objectId=${id}`) // Navigate with query parameter
+    navigate(`/Distributor_Dealer?objectId=${id}`)
   }
+
   return (
     <div className="p-4">
       {data ? (
@@ -136,7 +143,7 @@ const BrandProduct: React.FC = () => {
           </div>
           <h2 className="text-xl mt-4">Distributors</h2>
           <ul>
-            {distributors.map((distributor: User) => (
+            {distributors.map((distributor) => (
               <li
                 key={distributor._id}
                 className="cursor-pointer"
@@ -148,7 +155,7 @@ const BrandProduct: React.FC = () => {
           </ul>
           <h2 className="text-xl mt-4">Dealers</h2>
           <ul>
-            {dealers.map((dealer: User) => (
+            {dealers.map((dealer) => (
               <li
                 key={dealer._id}
                 className="cursor-pointer"
@@ -164,7 +171,7 @@ const BrandProduct: React.FC = () => {
             <>
               <h2 className="text-xl mt-4">Related Products</h2>
               <ul>
-                {relatedProducts.map((product: Product) => (
+                {relatedProducts.map((product) => (
                   <li key={product._id}>{product.name}</li>
                 ))}
               </ul>

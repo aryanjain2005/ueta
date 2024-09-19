@@ -85,7 +85,6 @@ export const getUserById = async (
   res: Response
 ): Promise<Response> => {
   const { objectId } = req.params;
-  console.log(objectId);
   try {
     // Fetch user by id
     const user = await User.findById(objectId);
