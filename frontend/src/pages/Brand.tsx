@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom' // Import useNavigate
 import axios from 'axios'
 
 // Define TypeScript interfaces for the brand data
 interface BrandData {
+  _id: string // Include the _id field for navigation
   name: string
   img: string
 }
@@ -12,6 +14,7 @@ const Brand: React.FC = () => {
   const [brands, setBrands] = useState<BrandData[]>([])
   const [newBrandName, setNewBrandName] = useState<string>('')
   const [newBrandImg, setNewBrandImg] = useState<string>('')
+  const navigate = useNavigate() // Initialize useNavigate
 
   // Fetch brand data from the backend API
   useEffect(() => {
@@ -24,17 +27,6 @@ const Brand: React.FC = () => {
       }
     }
 
-    // Fetch the hello endpoint if needed
-    const fetchHello = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/hello')
-        console.log(response)
-      } catch (error) {
-        console.error('Error fetching hello:', error)
-      }
-    }
-
-    fetchHello()
     fetchBrands()
   }, [])
 
@@ -66,16 +58,22 @@ const Brand: React.FC = () => {
     }
   }
 
+  // Handle brand image click
+  const handleBrandClick = (id: string) => {
+    navigate(`/Brand_Product?objectId=${id}`) // Navigate to the brand product page
+  }
+
   return (
     <div className="flex flex-col p-4">
-      <div className="flex flex-wrap -mx-4 mb-4">
-        {brands.map((brand, index) => (
-          <div key={index} className="w-full md:w-1/2 lg:w-1/4 px-4 mb-4">
-            <div className="bg-white p-4 border rounded-md shadow-md">
+      <div className="flex flex-wrap mb-4 justify-evenly">
+        {brands.map((brand) => (
+          <div key={brand._id} className="md:w-1/2 lg:w-1/4 px-4 mb-4">
+            <div className="bg-white p-6 border rounded-md shadow-md cursor-pointer flex flex-col items-center justify-center h-full">
               <img
                 src={brand.img}
-                alt={`Brand ${index}`}
-                className="w-full h-auto rounded-md"
+                alt={brand.name}
+                className="w-28 h-28 rounded-md overflow-hidden object-contain"
+                onClick={() => handleBrandClick(brand._id)}
               />
               <h3 className="mt-2 text-center text-lg font-semibold">
                 {brand.name}
@@ -83,49 +81,42 @@ const Brand: React.FC = () => {
             </div>
           </div>
         ))}
+        <div className="md:w-1/2 lg:w-1/4 px-4 mb-4">
+          <div className="bg-white p-6 border rounded-md shadow-md cursor-pointer flex flex-col items-center justify-center h-full">
+            <form onSubmit={handleAddBrand} className="mt-8">
+              <h2 className="text-xl font-semibold mb-4">Add New</h2>
+              <div className="mb-4">
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Brand Name"
+                  value={newBrandName}
+                  onChange={(e) => setNewBrandName(e.target.value)}
+                  className="mt-1 text-center block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <input
+                  id="img"
+                  type="text"
+                  placeholder="Image URL"
+                  value={newBrandImg}
+                  onChange={(e) => setNewBrandImg(e.target.value)}
+                  className="mt-1 text-center block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-3 py-1 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600"
+              >
+                Add Brand
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-
-      <form onSubmit={handleAddBrand} className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Add a New Brand</h2>
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Brand Name
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={newBrandName}
-            onChange={(e) => setNewBrandName(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="img"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Image URL
-          </label>
-          <input
-            id="img"
-            type="text"
-            value={newBrandImg}
-            onChange={(e) => setNewBrandImg(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600"
-        >
-          Add Brand
-        </button>
-      </form>
     </div>
   )
 }

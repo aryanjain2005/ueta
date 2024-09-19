@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className="bg-[#414359] w-full md:sticky top-0 z-20">
+      <nav className="bg-[#414359] w-screen sticky top-0 z-20">
         <div className="w-full mx-auto">
           <div className="flex justify-between h-16">
             <div className="flex">

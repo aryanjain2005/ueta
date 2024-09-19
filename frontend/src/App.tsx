@@ -6,6 +6,7 @@ import Distributor from './pages/Distributor'
 import Product from './pages/Product'
 import Brand from './pages/Brand'
 import Signup from './pages/Signup'
+import BrandProduct from './pages/Brand_Product'
 import './App.css'
 
 const App: React.FC = () => {
@@ -21,6 +22,7 @@ const App: React.FC = () => {
           <Route path="/dealer" element={<Dealer />} />
           <Route path="/product" element={<Product />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/Brand_Product" element={<BrandProduct />} />
         </Routes>
       </BrowserRouter>
     </>

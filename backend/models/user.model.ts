@@ -7,7 +7,7 @@ const brand_prodSchema = new mongoose.Schema({
     ref: "Brand", // Correct placement of ref
     required: true, // Optional: Make it required if necessary
   },
-  prod: {
+  product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product", // Correct placement of ref
     required: true, // Optional: Make it required if necessary

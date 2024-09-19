@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom' // Import useNavigate
 import axios from 'axios'
 
 // Define TypeScript interfaces for the product data
 interface ProductData {
+  _id: string // Product ID
   name: string
   img: string
+  brandId: string // Assuming you have brandId to redirect correctly
 }
 
 const Product: React.FC = () => {
@@ -12,13 +15,14 @@ const Product: React.FC = () => {
   const [products, setProducts] = useState<ProductData[]>([])
   const [newProductName, setNewProductName] = useState<string>('')
   const [newProductImg, setNewProductImg] = useState<string>('')
+  const navigate = useNavigate() // Initialize useNavigate
 
   // Fetch product data from the backend API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get<ProductData[]>(
-          'http://localhost:5000/product/getProducts'
+          '/api/product/getProducts'
         )
         setProducts(response.data)
       } catch (error) {
@@ -35,7 +39,7 @@ const Product: React.FC = () => {
 
     try {
       await axios.post(
-        'http://localhost:5000/product/addProduct',
+        '/api/product/addProduct',
         {
           name: newProductName,
           img: newProductImg
@@ -46,9 +50,10 @@ const Product: React.FC = () => {
           }
         }
       )
+
       // Refresh product list after adding new product
       const response = await axios.get<ProductData[]>(
-        'http://localhost:5000/product/getProducts'
+        '/api/product/getProducts'
       )
       setProducts(response.data)
       // Clear the form inputs
@@ -59,16 +64,22 @@ const Product: React.FC = () => {
     }
   }
 
+  // Handle product image click
+  const handleProductClick = (id: string) => {
+    navigate(`/Brand_Product?objectId=${id}`) // Navigate with query parameter
+  }
+
   return (
     <div className="flex flex-col p-4">
-      <div className="flex flex-wrap -mx-4 mb-4">
-        {products.map((product, index) => (
-          <div key={index} className="w-full md:w-1/2 lg:w-1/4 px-4 mb-4">
-            <div className="bg-white p-4 border rounded-md shadow-md">
+      <div className="flex flex-wrap mb-4 justify-evenly">
+        {products.map((product) => (
+          <div key={product._id} className="md:w-1/2 lg:w-1/4 px-4 mb-4">
+            <div className="bg-white p-6 border rounded-md shadow-md cursor-pointer flex flex-col items-center justify-center h-full">
               <img
                 src={product.img}
-                alt={`Product ${index}`}
-                className="w-full h-auto rounded-md"
+                alt={product.name}
+                className="w-28 h-28 rounded-md overflow-hidden object-contain"
+                onClick={() => handleProductClick(product._id)} // Pass product ID
               />
               <h3 className="mt-2 text-center text-lg font-semibold">
                 {product.name}
@@ -76,49 +87,42 @@ const Product: React.FC = () => {
             </div>
           </div>
         ))}
+        <div className="md:w-1/2 lg:w-1/4 px-4 mb-4">
+          <div className="bg-white p-6 border rounded-md shadow-md cursor-pointer flex flex-col items-center justify-center h-full">
+            <form onSubmit={handleAddProduct} className="mt-8">
+              <h2 className="text-xl font-semibold mb-4">Add a New Product</h2>
+              <div className="mb-4">
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Product Name"
+                  value={newProductName}
+                  onChange={(e) => setNewProductName(e.target.value)}
+                  className="mt-1 text-center block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <input
+                  id="img"
+                  type="text"
+                  placeholder="Image URL"
+                  value={newProductImg}
+                  onChange={(e) => setNewProductImg(e.target.value)}
+                  className="mt-1 text-center block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-3 py-1 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600"
+              >
+                Add Product
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-
-      <form onSubmit={handleAddProduct} className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Add a New Product</h2>
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Product Name
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={newProductName}
-            onChange={(e) => setNewProductName(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="img"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Image URL
-          </label>
-          <input
-            id="img"
-            type="text"
-            value={newProductImg}
-            onChange={(e) => setNewProductImg(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600"
-        >
-          Add Product
-        </button>
-      </form>
     </div>
   )
 }

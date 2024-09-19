@@ -32,3 +32,35 @@ export const getProducts = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getProductById = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { objectId } = req.params;
+  try {
+    const product = await ProductModel.findById(objectId);
+    if (product) {
+      return res.status(200).json(product);
+    } else {
+      return res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching productdvae" });
+  }
+};
+
+export const getProductsByIds = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const ids = req.query.ids ? (req.query.ids as string).split(",") : [];
+  try {
+    const products = await ProductModel.find({
+      _id: { $in: ids },
+    });
+    return res.status(200).json(products);
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching productssdadc" });
+  }
+};
