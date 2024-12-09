@@ -5,6 +5,7 @@ import Product from "../models/product.model";
 import bcrypt from "bcrypt";
 
 export const signupController = async (req: Request, res: Response) => {
+  console.log("Signup request received");
   const { name, email, password, img, role, type } = req.body;
 
   try {
@@ -17,8 +18,9 @@ export const signupController = async (req: Request, res: Response) => {
       role,
       type,
     });
-
+    console.log("New user created:", newUser);
     await newUser.save();
+    console.log("User saved to database");
     res
       .status(201)
       .json({ message: "User created successfully", user: newUser });
