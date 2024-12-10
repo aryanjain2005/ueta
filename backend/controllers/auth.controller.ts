@@ -10,6 +10,19 @@ export const signupController = async (req: Request, res: Response) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+    if (!name || !email || !password || !img || !role || !type) {
+      return res.status(403).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
     const newUser = new User({
       name,
       email,
@@ -24,6 +37,36 @@ export const signupController = async (req: Request, res: Response) => {
     res
       .status(201)
       .json({ message: "User created successfully", user: newUser });
+  } catch (error) {
+    // Type assertion or guard to handle the error correctly
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "An unexpected error occurred" });
+    }
+  }
+};
+
+export const loginController = async (req: Request, res: Response) => {
+  console.log("Login request received");
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+    res.status(200).json({
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      img: user.img,
+      type: user.type,
+    });
   } catch (error) {
     // Type assertion or guard to handle the error correctly
     if (error instanceof Error) {
