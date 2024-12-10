@@ -31,13 +31,18 @@ interface GroupedBrandProducts {
 }
 
 const MyProfile: React.FC = () => {
-  // State to hold user data and brand-product details
+  // State to hold user data, brands, products, and grouped brand-products
   const [user, setUser] = useState<User | null>(null)
   const [groupedBrandProducts, setGroupedBrandProducts] = useState<
     GroupedBrandProducts[]
   >([])
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([])
+  const [showDropdowns, setShowDropdowns] = useState<boolean>(false) // Single state to show both dropdowns
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +90,61 @@ const MyProfile: React.FC = () => {
     }
 
     fetchData()
+
+    // Fetch brands and products for dropdowns
+    const fetchBrandsAndProducts = async () => {
+      try {
+        const brandsResponse = await axios.get('/api/brand/getBrands')
+        setBrands(brandsResponse.data)
+
+        const productsResponse = await axios.get('/api/product/getProducts')
+        setProducts(productsResponse.data)
+      } catch (err) {
+        console.error('Error fetching brands/products:', err)
+        setError('Failed to load brands or products')
+      }
+    }
+
+    fetchBrandsAndProducts()
   }, [])
+
+  const handleAddBrandAndProducts = async () => {
+    const userJson = localStorage.getItem('user') // Get the user JSON string
+    if (!userJson) {
+      setError('Please login first')
+      setLoading(false)
+      window.location.href = '/login' // Redirect unauthenticated users
+      return
+    }
+
+    const userData = JSON.parse(userJson) // Parse the JSON string
+    const userId = userData.userId
+
+    if (selectedBrandId && selectedProductIds.length > 0) {
+      try {
+        await axios.post('/api/user/addBrandAndProducts', {
+          userId,
+          brandId: selectedBrandId,
+          productIds: selectedProductIds
+        })
+        alert('Brand and products added successfully')
+        setShowDropdowns(false) // Hide dropdowns after submission
+      } catch (error) {
+        console.error('Error adding brand and products:', error)
+        setError('Failed to add brand and products')
+      }
+    } else {
+      setError('Please select both a brand and at least one product')
+    }
+  }
+
+  const handleProductSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValues = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    )
+    setSelectedProductIds(selectedValues) // This should now work as selectedProductIds is an array of strings
+  }
 
   if (loading) {
     return <div>Loading...</div>
@@ -131,6 +190,52 @@ const MyProfile: React.FC = () => {
                 </div>
               </div>
             ))}
+            <button
+              onClick={() => setShowDropdowns(!showDropdowns)}
+              className="bg-blue-500 text-white p-2 rounded"
+            >
+              Add Brand and Products
+            </button>
+
+            {showDropdowns && (
+              <div className="mt-2">
+                {/* Brand Dropdown */}
+                <select
+                  value={selectedBrandId || ''}
+                  onChange={(e) => setSelectedBrandId(e.target.value)}
+                  className="p-2 border"
+                >
+                  <option value="">Select a brand</option>
+                  {brands.map((brand) => (
+                    <option key={brand._id} value={brand._id}>
+                      {brand.name}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Product Dropdown */}
+                <select
+                  multiple
+                  value={selectedProductIds}
+                  onChange={handleProductSelection}
+                  className="p-2 border"
+                >
+                  <option value="">Select products</option>
+                  {products.map((product) => (
+                    <option key={product._id} value={product._id}>
+                      {product.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <button
+              onClick={handleAddBrandAndProducts}
+              className="ml-2 bg-green-500 text-white p-2 rounded"
+            >
+              Submit
+            </button>
           </div>
         </>
       ) : (
