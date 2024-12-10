@@ -99,6 +99,15 @@ const Navbar: React.FC = () => {
                 <NavItem to="/distributor" toggleMenu={toggleMenu}>
                   Distributor
                 </NavItem>
+                <NavItem to="/signup" toggleMenu={toggleMenu}>
+                  Signup
+                </NavItem>
+                <NavItem to="/login" toggleMenu={toggleMenu}>
+                  Login
+                </NavItem>
+                <NavItem to="/myprofile" toggleMenu={toggleMenu}>
+                  My Profile
+                </NavItem>
               </>
             </div>
           </div>

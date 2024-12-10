@@ -81,25 +81,60 @@ export const getUsersByBrandProd = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { objectId } = req.params;
-  const dataType = req.query.dataType; // "brand" or "product"
+  const dataType = req.query.dataType as string; // "brand", "product", or "brandprod"
+  console.log(req.params);
+  console.log(req.query);
 
   try {
-    const queryKey =
-      dataType === "brand" ? "brand_prod.brand" : "brand_prod.product";
+    let query = {};
 
-    const users = await User.find({
-      [queryKey]: objectId, // Use dynamic key based on dataType
-    });
-
-    if (!users || users.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No users found for this brand/product" });
+    // Construct query based on the dataType
+    if (dataType === "brand") {
+      const { objectId } = req.query; // Extract objectId for brand query
+      if (!objectId) {
+        return res.status(400).json({
+          message: "Missing objectId for brand query",
+        });
+      }
+      query = { "brand_prod.brand": objectId };
+    } else if (dataType === "product") {
+      const { objectId } = req.query; // Extract objectId for product query
+      if (!objectId) {
+        return res.status(400).json({
+          message: "Missing objectId for product query",
+        });
+      }
+      query = { "brand_prod.product": objectId };
+    } else if (dataType === "brandprod") {
+      const { brandId, productId } = req.query; // Extract both brandId and productId for brandprod query
+      if (!brandId || !productId) {
+        return res.status(400).json({
+          message: "Missing brandId or productId for brandprod query",
+        });
+      }
+      query = {
+        "brand_prod.brand": brandId,
+        "brand_prod.product": productId,
+      };
+    } else {
+      return res.status(400).json({
+        message: "Invalid dataType. Use 'brand', 'product', or 'brandprod'",
+      });
     }
+
+    // Fetch users based on the constructed query
+    const users = await User.find(query);
+
+    // if (!users || users.length === 0) {
+    //   console.log("Koi nhi mila");
+    //   return res
+    //     .status(404)
+    //     .json({ message: "No users found for the given criteria" });
+    // }
 
     return res.status(200).json(users);
   } catch (error) {
+    console.error("Error fetching users:", error);
     return res.status(500).json({ message: "Error fetching users" });
   }
 };

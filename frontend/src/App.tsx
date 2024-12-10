@@ -10,6 +10,7 @@ import Login from './pages/Login'
 import BrandProduct from './pages/Brand_Product'
 import DistributorDealer from './pages/Distributor_Dealer'
 import './App.css'
+import MyProfile from './pages/My_profile'
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/brand_product" element={<BrandProduct />} />
           <Route path="/distributor_dealer" element={<DistributorDealer />} />
+          <Route path="/myprofile" element={<MyProfile />} />
         </Routes>
       </BrowserRouter>
     </>
