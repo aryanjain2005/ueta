@@ -13,6 +13,9 @@ const Login: React.FC = () => {
         password
       })
       console.log(response.data)
+      // Reset form fields after successful submission
+      setEmail('')
+      setPassword('')
       localStorage.setItem('user', JSON.stringify(response.data))
     } catch (error) {
       console.error(error) // Handle error

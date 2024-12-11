@@ -21,6 +21,13 @@ const Signup: React.FC = () => {
         type
       })
       console.log(response.data) // Handle success
+      // Reset form fields after successful submission
+      setName('')
+      setEmail('')
+      setPassword('')
+      setImg('')
+      setRole('user')
+      setType('standard')
     } catch (error) {
       console.error(error) // Handle error
     }
