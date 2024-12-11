@@ -1,0 +1,36 @@
+---
+import Container from '@components/container.astro'
+import PbList from '@components/pb-list.astro'
+import Layout from '@layouts/Layout.astro'
+
+const prodList = Array(20).fill({
+  name: 'Product 1',
+  image: '/media/tv.png',
+  slug: 'product-1'
+})
+const bList = Array(20).fill({
+  name: 'Brand 1',
+  image: '/media/lg.png',
+  slug: 'brand-1'
+})
+---
+
+<Layout title=''>
+  <Container class='py-8 space-y-16'>
+    <PbList
+      heading='Shop by Brands'
+      list={bList}
+      id='home-brand'
+      type='brand'
+    />
+    <div
+      class='bg-gradient-to-r from-transparent via-[#003da6] to-transparent h-0.5 mx-8'>
+    </div>
+    <PbList
+      heading='Shop by Products'
+      list={prodList}
+      id='home-prod'
+      type='product'
+    />
+  </Container>
+</Layout>

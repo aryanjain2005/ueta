@@ -1,0 +1,177 @@
+---
+import DdInfo from '@components/dd-info.astro'
+import ProdList from '@components/prod-list.astro'
+import Layout from '@layouts/Layout.astro'
+
+export const getStaticPaths = async () => {
+  const distributors = [
+    {
+      name: 'Distributor 1',
+      image: '/imgg.png',
+      slug: 'd1'
+    },
+    {
+      name: 'Distributor 2',
+      image: '/imgg.png',
+      slug: 'distributor-2'
+    },
+    {
+      name: 'Distributor 3',
+      image: '/imgg.png',
+      slug: 'distributor-3'
+    }
+  ]
+  return distributors.map((distributor) => ({
+    params: { slug: distributor.slug },
+    props: { entry: distributor }
+  }))
+}
+const { entry } = Astro.props
+---
+
+<Layout title={entry.name} bread={['dealer', entry.name]}
+  ><DdInfo name={entry.name} image={entry.image} /><ProdList
+    products={[
+      {
+        name: 'Product 1',
+        slug: 'p1',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 1',
+          slug: 'b1',
+          image: '/media/lg.png'
+        }
+      },
+      {
+        name: 'Product 2',
+        slug: 'p2',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      },
+      {
+        name: 'Product 3',
+        slug: 'p3',
+        image: '/media/tv.png',
+        brand: {
+          name: 'Brand 2',
+          slug: 'b2',
+          image: '/media/sony.png'
+        }
+      }
+    ]}
+  />
+</Layout>

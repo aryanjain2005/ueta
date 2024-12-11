@@ -1,0 +1,25 @@
+---
+interface Props {
+  class?: string
+  list: any[]
+  Item: any
+  size?: 'normal' | 'small'
+  props?: Record<string, any>
+}
+
+const {
+  class: className,
+  list,
+  Item,
+  size = 'normal',
+  props = {}
+} = Astro.props
+---
+
+<div
+  class:list={[
+    'flex gap-8 md:gap-12 w-fit max-w-full overflow-x-auto',
+    className
+  ]}>
+  {list.map((data) => <Item {...data} size={size} {...props} />)}
+</div>

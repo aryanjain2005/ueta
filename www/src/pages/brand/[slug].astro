@@ -1,0 +1,221 @@
+---
+import Layout from '@layouts/Layout.astro'
+import Container from '@components/container.astro'
+import Description from '@components/description.astro'
+import PbList from '@components/pb-list.astro'
+import DdList from '@components/dd-list.astro'
+import ScrollView from '@components/ui/scroll-view.astro'
+import PbItem from '@components/cards/pb-item.astro'
+
+const brand = {
+  name: 'Brand 1',
+  image: '/imgg.png',
+  slug: 'brand-1',
+  description:
+    'suppose commerce say polite barber hollow explore chairman operate suffer fill descendant scorn away beyond private description knowledge elect allow dead eat extension defeat over glory mixture spare case outward outside reward kneel regular everyday cruel pronounce pastry rival silent hard limb join review food momentary instant century waste',
+  products: [
+    {
+      name: 'Product 1',
+      image: '/imgg.png',
+      slug: 'product-1'
+    },
+    {
+      name: 'Product 2',
+      image: '/imgg.png',
+      slug: 'product-2'
+    }
+  ],
+  dealers: [
+    {
+      name: 'Dealer 1',
+      shopName: 'Shop 1',
+      image: '/imgg.png',
+      contact: [
+        { type: 'phone', value: '1234567890' },
+        { type: 'email', value: 'ok@ok.com' }
+      ]
+    },
+    {
+      name: 'Dealer 2',
+      shopName: 'Shop 2',
+      image: '/imgg.png',
+      contact: [
+        { type: 'phone', value: '1234567890' },
+        { type: 'email', value: 'ok@ok.com' }
+      ]
+    }
+  ],
+  distributors: [
+    {
+      name: 'Dealer 1',
+      shopName: 'Shop 1',
+      image: '/imgg.png',
+      contact: [
+        { type: 'phone', value: '1234567890' },
+        { type: 'email', value: 'ok@ok.com' }
+      ]
+    },
+    {
+      name: 'Dealer 2',
+      shopName: 'Shop 2',
+      image: '/imgg.png',
+      contact: [
+        { type: 'phone', value: '1234567890' },
+        { type: 'email', value: 'ok@ok.com' }
+      ]
+    }
+  ],
+  moreBrands: [
+    {
+      name: 'Brand 2',
+      image: '/imgg.png',
+      slug: 'brand-2'
+    },
+    {
+      name: 'Brand 3',
+      image: '/imgg.png',
+      slug: 'brand-3'
+    }
+  ]
+}
+interface Props {
+  entry: typeof brand
+}
+export async function getStaticPaths() {
+  const brand = {
+    name: 'Brand 1',
+    image: '/imgg.png',
+    slug: 'brand-1',
+    description:
+      'suppose commerce say polite barber hollow explore chairman operate suffer fill descendant scorn away beyond private description knowledge elect allow dead eat extension defeat over glory mixture spare case outward outside reward kneel regular everyday cruel pronounce pastry rival silent hard limb join review food momentary instant century waste',
+    products: [
+      {
+        name: 'Product 1',
+        image: '/imgg.png',
+        slug: 'product-1'
+      },
+      {
+        name: 'Product 2',
+        image: '/imgg.png',
+        slug: 'product-2'
+      }
+    ],
+    dealers: [
+      {
+        name: 'Dealer 1',
+        shopName: 'Shop 1',
+        image: '/media/person.png',
+        contact: [
+          { type: 'phone', value: '1234567890' },
+          { type: 'email', value: 'ok@ok.com' }
+        ],
+        slug: 'd1'
+      },
+      {
+        name: 'Dealer 2',
+        shopName: 'Shop 2',
+        image: '/media/person.png',
+        contact: [
+          { type: 'phone', value: '1234567890' },
+          { type: 'email', value: 'ok@ok.com' }
+        ],
+        slug: 'd2'
+      }
+    ],
+    distributors: [
+      {
+        name: 'distributor 1',
+        shopName: 'Shop 1',
+        image: '/media/person.png',
+        contact: [
+          { type: 'phone', value: '1234567890' },
+          { type: 'email', value: 'ok@ok.com' }
+        ],
+        slug: 'd1'
+      },
+      {
+        name: 'Distributor 2',
+        shopName: 'Shop 2',
+        image: '/media/person.png',
+        contact: [
+          { type: 'phone', value: '1234567890' },
+          { type: 'email', value: 'ok@ok.com' }
+        ],
+        slug: 'd2'
+      }
+    ],
+    moreBrands: [
+      {
+        name: 'Brand 2',
+        image: '/imgg.png',
+        slug: 'brand-2'
+      },
+      {
+        name: 'Brand 3',
+        image: '/imgg.png',
+        slug: 'brand-3'
+      }
+    ]
+  }
+  const prodList = Array(20).fill(brand)
+  return prodList.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }))
+}
+
+const { entry } = Astro.props
+---
+
+<Layout title={entry.name} bread={['brand', entry.name]}>
+  <Container class='py-12'>
+    <h2 class='text-4xl font-bold tracking-tight px-16 mb-4'>
+      {entry.name}
+    </h2>
+    <Description
+      title={entry.name}
+      description={entry.description}
+      image={entry.image}
+    />
+    <div class='px-8 space-y-16 mt-12'>
+      <PbList
+        heading='Shop by Products'
+        list={entry.products}
+        id={`product-more-${entry.slug}`}
+        type='product'
+      />
+      <DdList
+        heading=`Dealers of ${entry.name}`
+        list={entry.dealers}
+        id={`dealer-more-${entry.slug}`}
+        showMore={{
+          text: 'VIEW ALL DEALERS',
+          href: `/dealers?brand=${entry.slug}`
+        }}
+        type='dealer'
+      />
+      <div
+        class='bg-gradient-to-r from-transparent via-[#003da6] to-transparent h-0.5 w-full'>
+      </div>
+      <DdList
+        heading=`Distributors of ${entry.name}`
+        list={entry.distributors}
+        id={`distributors-more-${entry.slug}`}
+        showMore={{
+          text: 'VIEW ALL DEALERS',
+          href: `/distributors?brand=${entry.slug}`
+        }}
+        type='distributor'
+      />
+      <div class='space-y-4 text-lg font-bold w-full'>
+        <p>More Brands</p>
+        <ScrollView
+          list={entry.moreBrands}
+          Item={PbItem}
+          size='small'
+          props={{ pvs: '/brand/' }}
+        />
+      </div>
+    </div>
+  </Container>
+</Layout>
