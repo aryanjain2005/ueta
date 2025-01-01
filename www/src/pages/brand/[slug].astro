@@ -2,169 +2,27 @@
 import Layout from '@layouts/Layout.astro'
 import Container from '@components/container.astro'
 import Description from '@components/description.astro'
-import PbList from '@components/pb-list.astro'
-import DdList from '@components/dd-list.astro'
+import PbList from '@components/pb-list'
 import ScrollView from '@components/ui/scroll-view.astro'
-import PbItem from '@components/cards/pb-item.astro'
-
-const brand = {
-  name: 'Brand 1',
-  image: '/imgg.png',
-  slug: 'brand-1',
-  description:
-    'suppose commerce say polite barber hollow explore chairman operate suffer fill descendant scorn away beyond private description knowledge elect allow dead eat extension defeat over glory mixture spare case outward outside reward kneel regular everyday cruel pronounce pastry rival silent hard limb join review food momentary instant century waste',
-  products: [
-    {
-      name: 'Product 1',
-      image: '/imgg.png',
-      slug: 'product-1'
-    },
-    {
-      name: 'Product 2',
-      image: '/imgg.png',
-      slug: 'product-2'
-    }
-  ],
-  dealers: [
-    {
-      name: 'Dealer 1',
-      shopName: 'Shop 1',
-      image: '/imgg.png',
-      contact: [
-        { type: 'phone', value: '1234567890' },
-        { type: 'email', value: 'ok@ok.com' }
-      ]
-    },
-    {
-      name: 'Dealer 2',
-      shopName: 'Shop 2',
-      image: '/imgg.png',
-      contact: [
-        { type: 'phone', value: '1234567890' },
-        { type: 'email', value: 'ok@ok.com' }
-      ]
-    }
-  ],
-  distributors: [
-    {
-      name: 'Dealer 1',
-      shopName: 'Shop 1',
-      image: '/imgg.png',
-      contact: [
-        { type: 'phone', value: '1234567890' },
-        { type: 'email', value: 'ok@ok.com' }
-      ]
-    },
-    {
-      name: 'Dealer 2',
-      shopName: 'Shop 2',
-      image: '/imgg.png',
-      contact: [
-        { type: 'phone', value: '1234567890' },
-        { type: 'email', value: 'ok@ok.com' }
-      ]
-    }
-  ],
-  moreBrands: [
-    {
-      name: 'Brand 2',
-      image: '/imgg.png',
-      slug: 'brand-2'
-    },
-    {
-      name: 'Brand 3',
-      image: '/imgg.png',
-      slug: 'brand-3'
-    }
-  ]
-}
+import PbItem from '@components/cards/pb-item'
+import Link from '@components/ui/link.astro'
+import DDItem from '@components/cards/dd-item'
+import type { Brand } from 'types'
+import { drizzle } from 'drizzle-orm/d1'
+import * as schema from 'db/schema'
+import { eq } from 'drizzle-orm'
+import { VITE_API_URL } from 'constant'
 interface Props {
-  entry: typeof brand
+  entry: Brand
 }
-export async function getStaticPaths() {
-  const brand = {
-    name: 'Brand 1',
-    image: '/imgg.png',
-    slug: 'brand-1',
-    description:
-      'suppose commerce say polite barber hollow explore chairman operate suffer fill descendant scorn away beyond private description knowledge elect allow dead eat extension defeat over glory mixture spare case outward outside reward kneel regular everyday cruel pronounce pastry rival silent hard limb join review food momentary instant century waste',
-    products: [
-      {
-        name: 'Product 1',
-        image: '/imgg.png',
-        slug: 'product-1'
-      },
-      {
-        name: 'Product 2',
-        image: '/imgg.png',
-        slug: 'product-2'
-      }
-    ],
-    dealers: [
-      {
-        name: 'Dealer 1',
-        shopName: 'Shop 1',
-        image: '/media/person.png',
-        contact: [
-          { type: 'phone', value: '1234567890' },
-          { type: 'email', value: 'ok@ok.com' }
-        ],
-        slug: 'd1'
-      },
-      {
-        name: 'Dealer 2',
-        shopName: 'Shop 2',
-        image: '/media/person.png',
-        contact: [
-          { type: 'phone', value: '1234567890' },
-          { type: 'email', value: 'ok@ok.com' }
-        ],
-        slug: 'd2'
-      }
-    ],
-    distributors: [
-      {
-        name: 'distributor 1',
-        shopName: 'Shop 1',
-        image: '/media/person.png',
-        contact: [
-          { type: 'phone', value: '1234567890' },
-          { type: 'email', value: 'ok@ok.com' }
-        ],
-        slug: 'd1'
-      },
-      {
-        name: 'Distributor 2',
-        shopName: 'Shop 2',
-        image: '/media/person.png',
-        contact: [
-          { type: 'phone', value: '1234567890' },
-          { type: 'email', value: 'ok@ok.com' }
-        ],
-        slug: 'd2'
-      }
-    ],
-    moreBrands: [
-      {
-        name: 'Brand 2',
-        image: '/imgg.png',
-        slug: 'brand-2'
-      },
-      {
-        name: 'Brand 3',
-        image: '/imgg.png',
-        slug: 'brand-3'
-      }
-    ]
-  }
-  const prodList = Array(20).fill(brand)
-  return prodList.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry }
-  }))
+export async function getBrand(slug: string) {
+  const req = await fetch(`${VITE_API_URL}/brands/${slug}`)
+  return (await req.json()) as Brand
 }
-
-const { entry } = Astro.props
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/404')
+const entry = await getBrand(slug)
+if (!entry) return Astro.redirect('/404')
 ---
 
 <Layout title={entry.name} bread={['brand', entry.name]}>
@@ -179,42 +37,74 @@ const { entry } = Astro.props
     />
     <div class='px-8 space-y-16 mt-12'>
       <PbList
-        heading='Shop by Products'
+        client:load
         list={entry.products}
-        id={`product-more-${entry.slug}`}
         type='product'
+        useDialog={true}
       />
-      <DdList
-        heading=`Dealers of ${entry.name}`
-        list={entry.dealers}
-        id={`dealer-more-${entry.slug}`}
-        showMore={{
-          text: 'VIEW ALL DEALERS',
-          href: `/dealers?brand=${entry.slug}`
-        }}
-        type='dealer'
-      />
+
+      <div class='flex flex-col gap-6 items-center'>
+        <h3
+          class='text-5xl font-extrabold text-[#003DA6] text-center w-full font-gr'>
+          {`Dealers of ${entry.name}`}
+        </h3>
+        <ScrollView>
+          {
+            entry.dealers
+              .slice(0, 6)
+              .map((dealer) => (
+                <DDItem client:load bussiness={dealer} useDialog={true} />
+              ))
+          }
+        </ScrollView>
+        {
+          entry.distributors.length > 6 && (
+            <Link
+              target='_blank'
+              href={`/dealer?brand=${entry.slug}`}
+              class='w-fit text-xs'>
+              VIEW ALL DEALERS
+            </Link>
+          )
+        }
+      </div>
       <div
         class='bg-gradient-to-r from-transparent via-[#003da6] to-transparent h-0.5 w-full'>
       </div>
-      <DdList
-        heading=`Distributors of ${entry.name}`
-        list={entry.distributors}
-        id={`distributors-more-${entry.slug}`}
-        showMore={{
-          text: 'VIEW ALL DEALERS',
-          href: `/distributors?brand=${entry.slug}`
-        }}
-        type='distributor'
-      />
+      <div class='flex flex-col gap-6 items-center'>
+        <h3
+          class='text-5xl font-extrabold text-[#003DA6] text-center w-full font-gr'>
+          {`Distributors of ${entry.name}`}
+        </h3>
+        <ScrollView>
+          {
+            entry.distributors
+              .slice(0, 6)
+              .map((distributor) => (
+                <DDItem client:load bussiness={distributor} useDialog={true} />
+              ))
+          }
+        </ScrollView>
+        {
+          entry.distributors.length > 6 && (
+            <Link
+              target='_blank'
+              href={`/distributors?brand=${entry.slug}`}
+              class='w-fit text-xs'>
+              VIEW ALL DISTRIBUTORS
+            </Link>
+          )
+        }
+      </div>
       <div class='space-y-4 text-lg font-bold w-full'>
         <p>More Brands</p>
-        <ScrollView
-          list={entry.moreBrands}
-          Item={PbItem}
-          size='small'
-          props={{ pvs: '/brand/' }}
-        />
+        <ScrollView>
+          {
+            entry.moreBrands.map((data) => (
+              <PbItem type='brand' pb={data} size='small' shadow={true} />
+            ))
+          }
+        </ScrollView>
       </div>
     </div>
   </Container>

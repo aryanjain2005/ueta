@@ -1,14 +1,19 @@
 {
   "extends": "astro/tsconfigs/strict",
-   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
+  "include": [
+    ".astro/types.d.ts",
+    "**/*"
+  ],
+  "exclude": [
+    "dist"
+  ],
   "compilerOptions": {
     "baseUrl": "src",
     "jsx": "react-jsx",
-    "jsxImportSource": "preact",
+    "jsxImportSource": "react",
     "strictNullChecks": true,
     "types": [
-      "astro/client","preact"
+      "astro/client",
     ],
     "paths": {
       "@lib/*": [
@@ -29,6 +34,6 @@
       "@pages/*": [
         "pages/*"
       ]
-    },
-  },
+    }
+  }
 }

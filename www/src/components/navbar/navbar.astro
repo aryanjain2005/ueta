@@ -1,6 +1,9 @@
 ---
 import Link from '@components/ui/link.astro'
 import { Astronav, MenuItems, MenuIcon } from 'astro-navbar'
+// @ts-ignore
+const isLoogedin = Astro.locals.user
+const path = new URL(Astro.request.url).pathname
 ---
 
 <header
@@ -56,17 +59,25 @@ import { Astronav, MenuItems, MenuIcon } from 'astro-navbar'
         </button>
       </div>
       <div class='lg:hidden flex items-center mt-3 gap-4'>
-        <Link href='#' style='inverted' size='md'>Log in</Link>
-        <Link href='#' style='inverted' size='md'>Sign up</Link>
+        <Link href='/login' style='inverted' size='md'>Log in</Link>
       </div>
     </MenuItems>
   </Astronav>
   <div class='hidden lg:flex items-center gap-4'>
-    <Link href='#' style='inverted' size='md' class='font-semibold'>
-      Log in
-    </Link>
-    <Link href='#' style='inverted' size='md' class='font-semibold'
-      >Sign up
-    </Link>
+    {
+      Boolean(isLoogedin) ? (
+        <Link href='/logout' style='inverted' size='md' class='font-semibold'>
+          Log out
+        </Link>
+      ) : (
+        <Link
+          href={`/login?r=${path}`}
+          style='inverted'
+          size='md'
+          class='font-semibold'>
+          Log in
+        </Link>
+      )
+    }
   </div>
 </header>

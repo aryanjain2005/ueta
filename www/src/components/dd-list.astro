@@ -1,5 +1,5 @@
 ---
-import DDItem from '@components/cards/dd-item.astro'
+import DDItem from '@components/cards/dd-item'
 import Link from './ui/link.astro'
 import ScrollView from './ui/scroll-view.astro'
 
@@ -17,21 +17,3 @@ interface Props {
 
 const { class: className, heading, list, showMore, type } = Astro.props
 ---
-
-<div class:list={['flex flex-col gap-6 items-center', className]}>
-  <h3 class='text-5xl font-extrabold text-[#003DA6] text-center w-full font-gr'>
-    {heading}
-  </h3>
-  <ScrollView
-    list={list.slice(0, 6)}
-    Item={DDItem}
-    props={{ pvs: `/${type}/` }}
-  />
-  {
-    list.length > 6 && showMore && (
-      <Link target='_blank' href={showMore.href} class='w-fit text-xs'>
-        {showMore.text}
-      </Link>
-    )
-  }
-</div>

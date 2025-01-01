@@ -4,6 +4,7 @@ import Footer from '@components/footer.astro'
 import Navbar from '@components/navbar/navbar.astro'
 import '@fontsource-variable/space-grotesk'
 import Breadcrumbs from '@components/Breadcrumbs.astro'
+import '../styles/globals.css'
 
 export interface Props {
   title: string
@@ -15,9 +16,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString()
 const resolvedImageWithDomain = new URL('/opengraph.jpg', Astro.site).toString()
 
 const { title, bread = [] } = Astro.props
-const makeTitle = title
-  ? title + ' | ' + 'Astroship'
-  : 'Astroship - Starter Template for Astro with Tailwind CSS'
+const makeTitle = title ? title + ' | ' + 'UETA' : 'UETA'
 ---
 
 <!doctype html>
@@ -25,7 +24,8 @@ const makeTitle = title
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width' />
-    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <link rel='
+      icon' type='image/svg+xml' href='/favicon.svg' />
     <meta name='generator' content={Astro.generator} />
 
     <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
@@ -51,43 +51,10 @@ const makeTitle = title
       }}
     />
   </head>
-  <body>
+  <body class='min-h-screen flex flex-col'>
     <Navbar />
     <Breadcrumbs bread={bread} />
     <slot />
     <Footer />
-    <style is:global>
-      /* Improve Page speed */
-      /* https://css-tricks.com/almanac/properties/c/content-visibility/ */
-      img {
-        content-visibility: auto;
-      }
-      @font-face {
-        font-family: 'Gilroy';
-        src:
-          local('Gilroy-Regular'),
-          url(../assets/fonts/Gilroy-Regular.ttf) format('truetype');
-      }
-      @font-face {
-        font-family: 'Gilroy';
-        src:
-          local('Gilroy-Bold'),
-          url(../assets/fonts/Gilroy-Bold.ttf) format('truetype');
-      }
-
-      @font-face {
-        font-family: 'Gilroy';
-        src:
-          local('Gilroy-Medium'),
-          url(../assets/fonts/Gilroy-Medium.ttf) format('truetype');
-      }
-
-      @font-face {
-        font-family: 'Gilroy';
-        src:
-          local('Gilroy-Light'),
-          url(../assets/fonts/Gilroy-Light.ttf) format('truetype');
-      }
-    </style>
   </body>
 </html>

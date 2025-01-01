@@ -1,25 +1,15 @@
 ---
 interface Props {
   class?: string
-  list: any[]
-  Item: any
-  size?: 'normal' | 'small'
-  props?: Record<string, any>
 }
 
-const {
-  class: className,
-  list,
-  Item,
-  size = 'normal',
-  props = {}
-} = Astro.props
+const { class: className } = Astro.props
 ---
 
 <div
   class:list={[
-    'flex gap-8 md:gap-12 w-fit max-w-full overflow-x-auto',
+    'flex gap-8 md:gap-12 w-fit max-w-full overflow-x-auto p-1',
     className
   ]}>
-  {list.map((data) => <Item {...data} size={size} {...props} />)}
+  <slot />
 </div>

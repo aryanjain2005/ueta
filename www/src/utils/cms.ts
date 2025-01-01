@@ -1,8 +1,8 @@
-import * as contentful from "contentful";
-export const client = contentful.createClient({
-  space: "developer_bookshelf",
-  accessToken: "0b7f6x59a0",
-});
+// import * as contentful from "contentful";
+// export const client = contentful.createClient({
+//   space: "9j3cqex34syq",
+//   accessToken: "LzSLTCBb6vct8JjTsRtK8dg7JDtr7HJ8VJSGMxyKQDk",
+// });
 
 // client
 //   .getEntry("5PeGS2SoZGSa4GuiQsigQu")

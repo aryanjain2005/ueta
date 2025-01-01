@@ -1,177 +1,22 @@
 ---
 import DdInfo from '@components/dd-info.astro'
-import ProdList from '@components/prod-list.astro'
+import ProdList from '@components/prod-list'
 import Layout from '@layouts/Layout.astro'
+import { VITE_API_URL } from 'constant'
+import type { Business } from 'types'
 
-export const getStaticPaths = async () => {
-  const distributors = [
-    {
-      name: 'Distributor 1',
-      image: '/imgg.png',
-      slug: 'd1'
-    },
-    {
-      name: 'Distributor 2',
-      image: '/imgg.png',
-      slug: 'distributor-2'
-    },
-    {
-      name: 'Distributor 3',
-      image: '/imgg.png',
-      slug: 'distributor-3'
-    }
-  ]
-  return distributors.map((distributor) => ({
-    params: { slug: distributor.slug },
-    props: { entry: distributor }
-  }))
+export const getDistributor = async (slug: string) => {
+  const req = await fetch(`${VITE_API_URL}/distributors/${slug}`)
+  return (await req.json()) as Business<'distributor'>
 }
-const { entry } = Astro.props
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/404')
+
+const entry = await getDistributor(slug)
+if (!entry) return Astro.redirect('/404')
 ---
 
-<Layout title={entry.name} bread={['dealer', entry.name]}
-  ><DdInfo name={entry.name} image={entry.image} /><ProdList
-    products={[
-      {
-        name: 'Product 1',
-        slug: 'p1',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 1',
-          slug: 'b1',
-          image: '/media/lg.png'
-        }
-      },
-      {
-        name: 'Product 2',
-        slug: 'p2',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      },
-      {
-        name: 'Product 3',
-        slug: 'p3',
-        image: '/media/tv.png',
-        brand: {
-          name: 'Brand 2',
-          slug: 'b2',
-          image: '/media/sony.png'
-        }
-      }
-    ]}
-  />
+<Layout title={entry.name} bread={['dealer', entry.name]}>
+  <DdInfo name={entry.name} image={entry.images} />
+  <ProdList client:load brands={entry.brands} />
 </Layout>

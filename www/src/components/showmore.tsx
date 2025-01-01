@@ -1,20 +1,15 @@
-import { useState } from "preact/hooks"
+import { useState } from "react"
 
-export const ShowMore = ({ id, className,type='blue'}:{
-  id: string
+export const ShowMore = ({className,type='blue',onClick}:{
   className?: string
   type?: string
+  onClick?: (isShow:boolean) => void
 }) => {
   const [showMore, setShowMore] = useState(false)
   return (
     <button
       onClick={() =>{
-        const element = document.querySelectorAll(`.extended-list-${id}`)
-        if (!element.length) return
-        element.forEach((el) => {
-          showMore? el.classList.add('hidden') :
-          el.classList.remove('hidden')
-        })
+        onClick && onClick(showMore)
         setShowMore(!showMore)
       }}
       className={ className }
