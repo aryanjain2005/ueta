@@ -1,7 +1,7 @@
 ---
 interface Props {
   name: string
-  image?: string
+  image: string | null
   class?: string
 }
 
@@ -18,11 +18,14 @@ const { name, image, class: className } = Astro.props
       {name}
     </h2>
     <slot />
-  </div>
-  <img
-    src={image || '/imgg.png'}
-    alt={name}
-    class='rounded-md w-full md:min-w-[300px] lg:w-[500px]'
-    loading='lazy'
-  />
+  </div>{
+    image && (
+      <img
+        src={image || '/imgg.png'}
+        alt={name}
+        class='rounded-md w-full md:min-w-[300px] lg:w-[400px]'
+        loading='lazy'
+      />
+    )
+  }
 </div>

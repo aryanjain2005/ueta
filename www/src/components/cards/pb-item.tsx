@@ -27,13 +27,15 @@ const PbItem = ({
       className={`flex-col flex gap-1 items-center ${className || ""}`}>
       <div
         className={`flex items-center justify-center rounded-md ${
-          size == "normal" ? "w-[160px] h-[160px]" : "w-[100px] h-[100px] "
+          size == "normal"
+            ? "w-[120px] h-[120px] sm:w-[160px] h-[160px]"
+            : "w-[100px] h-[100px] "
         }
           ${shadow ? "shadow-md p-2" : ""}`}>
         <img
           src={pb.image || "imgg.png"}
           alt={pb.name}
-          className="rounded-md w-full object-cover"
+          className="rounded-md  object-cover"
           loading="lazy"
         />
       </div>

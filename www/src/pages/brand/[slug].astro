@@ -8,21 +8,41 @@ import PbItem from '@components/cards/pb-item'
 import Link from '@components/ui/link.astro'
 import DDItem from '@components/cards/dd-item'
 import type { Brand } from 'types'
+import { getBrand } from 'db/server'
 import { drizzle } from 'drizzle-orm/d1'
-import * as schema from 'db/schema'
-import { eq } from 'drizzle-orm'
-import { VITE_API_URL } from 'constant'
+import * as s from 'db/schema'
 interface Props {
   entry: Brand
 }
-export async function getBrand(slug: string) {
-  const req = await fetch(`${VITE_API_URL}/brands/${slug}`)
-  return (await req.json()) as Brand
+// @ts-ignore
+const { env } = Astro.locals.runtime
+console.log(env)
+const db = drizzle(env.DB, {
+  schema: s
+})
+async function getBrandBySlug(slug: string) {
+  try {
+    const entry = await getBrand(db, slug)
+    return entry
+  } catch (e) {
+    console.log(e)
+    return null
+  }
 }
 const { slug } = Astro.params
 if (!slug) return Astro.redirect('/404')
-const entry = await getBrand(slug)
+const entry = await getBrandBySlug(slug)
 if (!entry) return Astro.redirect('/404')
+
+// @ts-ignore
+const user = Astro.locals.user
+if (!user) {
+  entry.distributors = []
+  entry.products = entry.products.map(({ distributors, ...r }) => ({
+    ...r,
+    distributors: []
+  }))
+}
 ---
 
 <Layout title={entry.name} bread={['brand', entry.name]}>
@@ -32,70 +52,76 @@ if (!entry) return Astro.redirect('/404')
     </h2>
     <Description
       title={entry.name}
-      description={entry.description}
+      description={entry.description || ''}
       image={entry.image}
     />
     <div class='px-8 space-y-16 mt-12'>
-      <PbList
-        client:load
-        list={entry.products}
-        type='product'
-        useDialog={true}
-      />
+      {
+        entry.products.length > 0 && (
+          <PbList
+            parent={{
+              name: entry.name,
+              slug: entry.slug
+            }}
+            client:load
+            list={entry.products}
+            type='product'
+            useDialog={true}
+          />
+        )
+      }
 
-      <div class='flex flex-col gap-6 items-center'>
-        <h3
-          class='text-5xl font-extrabold text-[#003DA6] text-center w-full font-gr'>
-          {`Dealers of ${entry.name}`}
-        </h3>
-        <ScrollView>
-          {
-            entry.dealers
-              .slice(0, 6)
-              .map((dealer) => (
+      {
+        entry.dealers.length > 0 && (
+          <div class='flex flex-col gap-6 items-center'>
+            <h3 class='text-5xl font-extrabold text-[#003DA6] text-center w-full font-gr'>
+              {`Dealers of ${entry.name}`}
+            </h3>
+            <ScrollView>
+              {entry.dealers.slice(0, 6).map((dealer) => (
                 <DDItem client:load bussiness={dealer} useDialog={true} />
-              ))
-          }
-        </ScrollView>
-        {
-          entry.distributors.length > 6 && (
-            <Link
-              target='_blank'
-              href={`/dealer?brand=${entry.slug}`}
-              class='w-fit text-xs'>
-              VIEW ALL DEALERS
-            </Link>
-          )
-        }
-      </div>
-      <div
-        class='bg-gradient-to-r from-transparent via-[#003da6] to-transparent h-0.5 w-full'>
-      </div>
-      <div class='flex flex-col gap-6 items-center'>
-        <h3
-          class='text-5xl font-extrabold text-[#003DA6] text-center w-full font-gr'>
-          {`Distributors of ${entry.name}`}
-        </h3>
-        <ScrollView>
-          {
-            entry.distributors
-              .slice(0, 6)
-              .map((distributor) => (
-                <DDItem client:load bussiness={distributor} useDialog={true} />
-              ))
-          }
-        </ScrollView>
-        {
-          entry.distributors.length > 6 && (
-            <Link
-              target='_blank'
-              href={`/distributors?brand=${entry.slug}`}
-              class='w-fit text-xs'>
-              VIEW ALL DISTRIBUTORS
-            </Link>
-          )
-        }
-      </div>
+              ))}
+            </ScrollView>
+            {entry.distributors.length > 6 && (
+              <Link
+                target='_blank'
+                href={`/dealer?brand=${entry.slug}`}
+                class='w-fit text-xs'>
+                VIEW ALL DEALERS
+              </Link>
+            )}
+          </div>
+        )
+      }
+      {
+        entry.distributors.length > 0 && (
+          <>
+            <div class='bg-gradient-to-r from-transparent via-[#003da6] to-transparent h-0.5 w-full' />
+            <div class='flex flex-col gap-6 items-center'>
+              <h3 class='text-5xl font-extrabold text-[#003DA6] text-center w-full font-gr'>
+                {`Distributors of ${entry.name}`}
+              </h3>
+              <ScrollView>
+                {entry.distributors.slice(0, 6).map((distributor) => (
+                  <DDItem
+                    client:load
+                    bussiness={distributor}
+                    useDialog={true}
+                  />
+                ))}
+              </ScrollView>
+              {entry.distributors.length > 6 && (
+                <Link
+                  target='_blank'
+                  href={`/distributors?brand=${entry.slug}`}
+                  class='w-fit text-xs'>
+                  VIEW ALL DISTRIBUTORS
+                </Link>
+              )}
+            </div>
+          </>
+        )
+      }
       <div class='space-y-4 text-lg font-bold w-full'>
         <p>More Brands</p>
         <ScrollView>

@@ -1,12 +1,11 @@
 ---
-import PbItem from '@components/cards/pb-item'
 import Container from '@components/container.astro'
 import Layout from '@layouts/Layout.astro'
 export const prerender = false
 
-const queries = new URL(Astro.request.url).searchParams
-const brand = queries.get('brand')
-const product = queries.get('product')
+// const queries = new URL(Astro.request.url).searchParams
+// const brand = queries.get('brand')
+// const product = queries.get('product')
 ---
 
 <Layout title='Dealer' bread={['dealer']}>

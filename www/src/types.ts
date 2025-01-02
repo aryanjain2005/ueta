@@ -1,6 +1,6 @@
 export type Product = {
   name: string;
-  description: string;
+  description: string | null;
   image: string;
   slug: string;
   brands: (Omit<
@@ -20,7 +20,7 @@ export type Product = {
 
 export type Brand = {
   name: string;
-  description: string;
+  description: string | null;
   image: string;
   slug: string;
   products: (Omit<
@@ -42,11 +42,11 @@ export type Business<T extends "dealer" | "distributor"> = {
   type: T;
   name: string;
   shopName: string;
-  location: string;
-  address: string;
+  location: string | null;
+  address: string | null;
   slug: string;
-  images: string;
-  shopImages: string[];
+  image: string | null;
+  shopImages: string[] | null;
   contact: {
     type: "phone" | "email" | "whatsapp" | "facebook" | "instagram";
     value: string;

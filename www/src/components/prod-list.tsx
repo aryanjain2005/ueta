@@ -66,16 +66,18 @@ const ProdList = ({ brands }: Props) => {
 
   return (
     <div className="w-full px-8 md:px-14 py-8">
-      <div className="flex w-full justify-between px-8 py-2">
-        <p className="text-4xl font-extrabold font-gr">Products With Brand</p>
+      <div className="max-sm:flex-col flex w-full justify-between sm:px-8 py-2 gap-2 md:gap-4 max-sm:items-end">
+        <p className="text-4xl font-extrabold font-gr max-sm:w-full">
+          Products With Brand
+        </p>
         <Dialog>
           <DialogTrigger asChild>
-            <button className="border flex gap-2 items-center border-black/50 rounded-sm px-4 py-1">
+            <button className="border flex gap-2 items-center border-black/50 rounded-sm w-fit px-4 py-1">
               <span className="text-black/50"> Filter </span>
               <Filter className="h-5 w-5" fill="black" opacity="0.5" />
             </button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="max-w-[90vw] sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Filter Settings</DialogTitle>
             </DialogHeader>
@@ -160,7 +162,7 @@ const ProdList = ({ brands }: Props) => {
                 <img
                   src={brand.image || "/imgg.png"}
                   alt={brand.name}
-                  className="rounded-md w-full object-cover"
+                  className="rounded-md  object-cover"
                   loading="lazy"
                 />
               </div>

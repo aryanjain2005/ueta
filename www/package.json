@@ -11,7 +11,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate:local": "wrangler d1 migrations apply ueta-dev --local",
     "db:migrate:prod": "wrangler d1 migrations apply ueta-dev --remote",
-    "db:studio:local": "powershell -Command \"$LOCAL_DB_PATH = (Get-ChildItem .wrangler\\state\\v3\\d1\\miniflare-D1DatabaseObject -Filter '*.sqlite' -Recurse | Select-Object -First 1).FullName; drizzle-kit studio\"",
+    "db:studio:local": "drizzle-kit studio",
     "db:studio:prod": "source .drizzle.env && DB_ID='88009640-3bb6-41cc-ac11-6c83fe80bf0c' drizzle-kit studio"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-toast": "^1.2.4",
     "@tailwindcss/typography": "^0.5.13",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",

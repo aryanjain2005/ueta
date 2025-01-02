@@ -7,6 +7,10 @@ import type { Brand, Product } from "types";
 type Props = {
   size?: "normal" | "small";
   type: "product" | "brand";
+  parent?: {
+    name: string;
+    slug: string;
+  };
   className?: string;
   useDialog?: boolean;
 } & (
@@ -15,6 +19,7 @@ type Props = {
 );
 
 const PBList = ({
+  parent,
   className,
   list,
   type,
@@ -28,7 +33,29 @@ const PBList = ({
   const renderPBItem = (pb: any) => {
     if (useDialog) {
       return (
-        <DDListDialog dealers={pb.dealers} distributors={pb.distributors}>
+        <DDListDialog
+          product={
+            type === "product"
+              ? {
+                  name: pb.name,
+                  slug: pb.slug,
+                }
+              : parent
+              ? parent
+              : { name: "", slug: "" }
+          }
+          brand={
+            type === "brand"
+              ? {
+                  name: pb.name,
+                  slug: pb.slug,
+                }
+              : parent
+              ? parent
+              : { name: "", slug: "" }
+          }
+          dealers={pb.dealers}
+          distributors={pb.distributors}>
           <PBItem link={false} size={size} pb={pb} type={type} />
         </DDListDialog>
       );

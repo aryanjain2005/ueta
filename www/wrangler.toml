@@ -1,7 +1,5 @@
 name="ueta-frontend"
-compatibility_date = "2024-12-05"
 vars = { ENV_TYPE = "dev" }
-compatibility_flags = [ "nodejs_compat" ]
 
 [[r2_buckets]]
 binding = "BUCKET"
