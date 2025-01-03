@@ -1,0 +1,60 @@
+---
+import { ContactButton } from '@components/contact-button'
+interface Props {
+  name: string
+  shopName: string
+  image?: string
+  contact?: {
+    type: 'phone' | 'email' | 'whatsapp'
+    value: string
+  }[]
+  class?: string
+  size?: 'normal' | 'small'
+  slug: string
+  pvs?: string
+}
+
+const {
+  name,
+  shopName,
+  image,
+  class: className,
+  contact,
+  size = 'normal',
+  slug,
+  pvs = ''
+} = Astro.props
+---
+
+<a
+  href={`${pvs}${slug}`}
+  class:list={['flex-col flex gap-1 items-center', className]}>
+  <div
+    class:list={[
+      'flex items-center justify-center',
+      size == 'normal' ? 'w-[160px] h-[160px] ' : 'w-[100px] h-[100px] '
+    ]}>
+    <img
+      src={image || 'imgg.png'}
+      alt={name}
+      class='rounded-md w-full object-cover'
+      loading='lazy'
+    />
+  </div>
+  <h2 class='tracking-tight font-medium text-2xl'>
+    {name}
+  </h2>
+  <h5 class='tracking-tight text-lg'>
+    {shopName}
+  </h5>
+  {
+    contact && contact.length && (
+      <div class='flex gap-8'>
+        {contact.map(({ type, value }) => (
+          <ContactButton client:load type={type} value={value} />
+        ))}
+      </div>
+    )
+  }
+  <slot />
+</a>

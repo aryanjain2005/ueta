@@ -1,0 +1,22 @@
+name="ueta-frontend"
+vars = { ENV_TYPE = "dev" }
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "ueta-dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ueta-dev"
+database_id = "538a9277-e6c9-42da-a350-61813430c2cb"
+migrations_dir = "migrations"
+preview_database_id = "DB"
+
+[env.prod]
+vars = { ENV_TYPE = "prod" }
+d1_databases = [
+    { binding = "DB", database_name = "ueta-prod", database_id = "your_DB_id", migrations_dir = "migrations" },
+]
+r2_buckets = [
+    { binding = "BUCKET", bucket_name = "ueta-prod"},
+]
