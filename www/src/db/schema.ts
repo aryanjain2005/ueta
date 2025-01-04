@@ -49,7 +49,10 @@ export const contacts = sqliteTable("contacts", {
   }),
   businessId: integer("business_id")
     .notNull()
-    .references(() => businesses.id),
+    .references(() => businesses.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
   type: text("type", {
     enum: ["phone", "email", "whatsapp", "facebook", "instagram"],
   }).notNull(), // "phone" | "email" | "whatsapp" | "facebook" | "instagram"
@@ -75,10 +78,16 @@ export const productBrand = sqliteTable(
     }),
     productId: integer("product_id")
       .notNull()
-      .references(() => products.id),
+      .references(() => products.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
     brandId: integer("brand_id")
       .notNull()
-      .references(() => brands.id),
+      .references(() => brands.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
   },
   (table) => ({
     productBrandUnique: uniqueIndex("product_brand_unique").on(
@@ -88,43 +97,35 @@ export const productBrand = sqliteTable(
   })
 );
 
-export const businessProduct = sqliteTable(
-  "business_product",
+export const businessBrandProduct = sqliteTable(
+  "business_brand_product",
   {
     id: integer("id").primaryKey({
       autoIncrement: true,
     }),
     businessId: integer("business_id")
       .notNull()
-      .references(() => businesses.id),
+      .references(() => businesses.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
     productId: integer("product_id")
       .notNull()
-      .references(() => products.id),
-  },
-  (table) => ({
-    businessProductUnique: uniqueIndex("business_product_unique").on(
-      table.businessId,
-      table.productId
-    ),
-  })
-);
-
-export const businessBrand = sqliteTable(
-  "business_brand",
-  {
-    id: integer("id").primaryKey({
-      autoIncrement: true,
-    }),
-    businessId: integer("business_id")
-      .notNull()
-      .references(() => businesses.id),
+      .references(() => products.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
     brandId: integer("brand_id")
       .notNull()
-      .references(() => brands.id),
+      .references(() => brands.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
   },
   (table) => ({
-    businessBrandUnique: uniqueIndex("business_brand_unique").on(
+    businessProductUnique: uniqueIndex("business_brand_product_unique").on(
       table.businessId,
+      table.productId,
       table.brandId
     ),
   })
@@ -132,18 +133,17 @@ export const businessBrand = sqliteTable(
 
 export const productsRelations = relations(products, ({ many }) => ({
   productBrands: many(productBrand),
-  businessProducts: many(businessProduct),
+  businessBrandProducts: many(businessBrandProduct),
 }));
 
 export const brandsRelations = relations(brands, ({ many }) => ({
   productBrands: many(productBrand),
-  businessBrands: many(businessBrand),
+  businessBrandProducts: many(businessBrandProduct),
 }));
 
 export const businessesRelations = relations(businesses, ({ many }) => ({
   contacts: many(contacts),
-  businessProducts: many(businessProduct),
-  businessBrands: many(businessBrand),
+  businessBrandProducts: many(businessBrandProduct),
 }));
 
 export const contactsRelations = relations(contacts, ({ one }) => ({
@@ -164,27 +164,20 @@ export const productBrandRelations = relations(productBrand, ({ one }) => ({
   }),
 }));
 
-export const businessProductRelations = relations(
-  businessProduct,
+export const businessBrandProductRelations = relations(
+  businessBrandProduct,
   ({ one }) => ({
     business: one(businesses, {
-      fields: [businessProduct.businessId],
+      fields: [businessBrandProduct.businessId],
       references: [businesses.id],
     }),
     product: one(products, {
-      fields: [businessProduct.productId],
+      fields: [businessBrandProduct.productId],
       references: [products.id],
+    }),
+    brand: one(brands, {
+      fields: [businessBrandProduct.brandId],
+      references: [brands.id],
     }),
   })
 );
-
-export const businessBrandRelations = relations(businessBrand, ({ one }) => ({
-  business: one(businesses, {
-    fields: [businessBrand.businessId],
-    references: [businesses.id],
-  }),
-  brand: one(brands, {
-    fields: [businessBrand.brandId],
-    references: [brands.id],
-  }),
-}));

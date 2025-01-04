@@ -21,7 +21,7 @@ export const getBrand = async (
               slug: true,
             },
             with: {
-              businessProducts: {
+              businessBrandProducts: {
                 with: {
                   business: {
                     columns: {
@@ -45,7 +45,7 @@ export const getBrand = async (
           },
         },
       },
-      businessBrands: {
+      businessBrandProducts: {
         with: {
           business: {
             columns: {
@@ -91,8 +91,12 @@ export const getBrand = async (
       description: productBrand.product.description,
       image: productBrand.product.image,
       slug: productBrand.product.slug,
-      dealers: productBrand.product.businessProducts
-        .filter((b) => b.business.type === "dealer")
+      dealers: productBrand.product.businessBrandProducts
+        .filter(
+          (b, i, s) =>
+            b.business.type === "dealer" &&
+            s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+        )
         .map((businessProduct) => ({
           type: "dealer",
           slug: businessProduct.business.slug,
@@ -107,8 +111,12 @@ export const getBrand = async (
             value: contact.value,
           })),
         })),
-      distributors: productBrand.product.businessProducts
-        .filter((b) => b.business.type === "distributor")
+      distributors: productBrand.product.businessBrandProducts
+        .filter(
+          (b, i, s) =>
+            b.business.type === "distributor" &&
+            s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+        )
         .map((businessProduct) => ({
           type: "distributor",
           slug: businessProduct.business.slug,
@@ -124,8 +132,12 @@ export const getBrand = async (
           })),
         })),
     })),
-    dealers: brandsResult.businessBrands
-      .filter((bb) => bb.business.type === "dealer")
+    dealers: brandsResult.businessBrandProducts
+      .filter(
+        (b, i, s) =>
+          b.business.type === "dealer" &&
+          s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+      )
       .map((businessBrand) => ({
         type: "dealer",
         slug: businessBrand.business.slug,
@@ -140,8 +152,12 @@ export const getBrand = async (
           value: contact.value,
         })),
       })),
-    distributors: brandsResult.businessBrands
-      .filter((bb) => bb.business.type === "distributor")
+    distributors: brandsResult.businessBrandProducts
+      .filter(
+        (b, i, s) =>
+          b.business.type === "distributor" &&
+          s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+      )
       .map((businessBrand) => ({
         type: "distributor",
         slug: businessBrand.business.slug,
@@ -184,7 +200,7 @@ export const getProduct = async (
               slug: true,
             },
             with: {
-              businessBrands: {
+              businessBrandProducts: {
                 with: {
                   business: {
                     columns: {
@@ -208,7 +224,7 @@ export const getProduct = async (
           },
         },
       },
-      businessProducts: {
+      businessBrandProducts: {
         with: {
           business: {
             columns: {
@@ -254,8 +270,12 @@ export const getProduct = async (
       description: productBrand.brand.description,
       image: productBrand.brand.image,
       slug: productBrand.brand.slug,
-      dealers: productBrand.brand.businessBrands
-        .filter((b) => b.business.type === "dealer")
+      dealers: productBrand.brand.businessBrandProducts
+        .filter(
+          (b, i, s) =>
+            b.business.type === "dealer" &&
+            s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+        )
         .map((businessBrand) => ({
           type: "dealer",
           slug: businessBrand.business.slug,
@@ -270,8 +290,12 @@ export const getProduct = async (
             value: contact.value,
           })),
         })),
-      distributors: productBrand.brand.businessBrands
-        .filter((b) => b.business.type === "distributor")
+      distributors: productBrand.brand.businessBrandProducts
+        .filter(
+          (b, i, s) =>
+            b.business.type === "distributor" &&
+            s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+        )
         .map((businessBrand) => ({
           type: "distributor",
           slug: businessBrand.business.slug,
@@ -287,8 +311,12 @@ export const getProduct = async (
           })),
         })),
     })),
-    dealers: productResult.businessProducts
-      .filter((bp) => bp.business.type === "dealer")
+    dealers: productResult.businessBrandProducts
+      .filter(
+        (b, i, s) =>
+          b.business.type === "dealer" &&
+          s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+      )
       .map((businessProduct) => ({
         type: "dealer",
         slug: businessProduct.business.slug,
@@ -303,8 +331,12 @@ export const getProduct = async (
           value: contact.value,
         })),
       })),
-    distributors: productResult.businessProducts
-      .filter((bp) => bp.business.type === "distributor")
+    distributors: productResult.businessBrandProducts
+      .filter(
+        (b, i, s) =>
+          b.business.type === "distributor" &&
+          s.findIndex((bb) => bb.business.slug === b.business.slug) === i
+      )
       .map((businessProduct) => ({
         type: "distributor",
         slug: businessProduct.business.slug,
@@ -340,58 +372,22 @@ export const getDistributor = async (
     ),
     with: {
       contacts: true,
-      businessProducts: {
+      businessBrandProducts: {
         with: {
           product: {
             columns: {
-              id: true,
               name: true,
               description: true,
               image: true,
               slug: true,
-            },
-            with: {
-              productBrands: {
-                with: {
-                  brand: {
-                    columns: {
-                      id: true,
-                      name: true,
-                      description: true,
-                      image: true,
-                      slug: true,
-                    },
-                  },
-                },
-              },
             },
           },
-        },
-      },
-      businessBrands: {
-        with: {
           brand: {
             columns: {
-              id: true,
               name: true,
               description: true,
               image: true,
               slug: true,
-            },
-            with: {
-              productBrands: {
-                with: {
-                  product: {
-                    columns: {
-                      id: true,
-                      name: true,
-                      description: true,
-                      image: true,
-                      slug: true,
-                    },
-                  },
-                },
-              },
             },
           },
         },
@@ -414,38 +410,35 @@ export const getDistributor = async (
       type: contact.type,
       value: contact.value,
     })),
-    products: res.businessProducts.map((businessProduct) => ({
-      name: businessProduct.product.name,
-      description: businessProduct.product.description,
-      image: businessProduct.product.image,
-      slug: businessProduct.product.slug,
-      brands: businessProduct.product.productBrands
-        .filter(
-          (productBrand) => productBrand.productId === businessProduct.productId
-        )
-        .map((productBrand) => ({
-          name: productBrand.brand.name,
-          description: productBrand.brand.description,
-          image: productBrand.brand.image,
-          slug: productBrand.brand.slug,
-        })),
-    })),
-    brands: res.businessBrands.map((businessBrand) => ({
-      name: businessBrand.brand.name,
-      description: businessBrand.brand.description,
-      image: businessBrand.brand.image,
-      slug: businessBrand.brand.slug,
-      products: businessBrand.brand.productBrands
-        .filter(
-          (productBrand) => productBrand.brandId === businessBrand.brandId
-        )
-        .map((productBrand) => ({
-          name: productBrand.product.name,
-          description: productBrand.product.description,
-          image: productBrand.product.image,
-          slug: productBrand.product.slug,
-        })),
-    })),
+    brands: res.businessBrandProducts.reduce((acc, businessBrandProduct) => {
+      const brandPresent = acc.findIndex(
+        (brand) => brand.slug === businessBrandProduct.brand.slug
+      );
+      if (brandPresent === -1) {
+        acc.push({
+          name: businessBrandProduct.brand.name,
+          description: businessBrandProduct.brand.description,
+          image: businessBrandProduct.brand.image,
+          slug: businessBrandProduct.brand.slug,
+          products: [
+            {
+              name: businessBrandProduct.product.name,
+              description: businessBrandProduct.product.description,
+              image: businessBrandProduct.product.image,
+              slug: businessBrandProduct.product.slug,
+            },
+          ],
+        });
+      } else {
+        acc[brandPresent].products.push({
+          name: businessBrandProduct.product.name,
+          description: businessBrandProduct.product.description,
+          image: businessBrandProduct.product.image,
+          slug: businessBrandProduct.product.slug,
+        });
+      }
+      return acc;
+    }, [] as Business<"dealer">["brands"]),
   };
   return distributor;
 };
@@ -458,65 +451,30 @@ export const getDealer = async (
     where: and(eq(s.businesses.slug, slug), eq(s.businesses.type, "dealer")),
     with: {
       contacts: true,
-      businessProducts: {
-        where: eq(s.businessProduct.businessId, s.businesses.id),
+      businessBrandProducts: {
         with: {
           product: {
             columns: {
-              id: true,
               name: true,
               description: true,
               image: true,
               slug: true,
-            },
-            with: {
-              productBrands: {
-                with: {
-                  brand: {
-                    columns: {
-                      id: true,
-                      name: true,
-                      description: true,
-                      image: true,
-                      slug: true,
-                    },
-                  },
-                },
-              },
             },
           },
-        },
-      },
-      businessBrands: {
-        with: {
           brand: {
             columns: {
-              id: true,
               name: true,
               description: true,
               image: true,
               slug: true,
-            },
-            with: {
-              productBrands: {
-                with: {
-                  product: {
-                    columns: {
-                      id: true,
-                      name: true,
-                      description: true,
-                      image: true,
-                      slug: true,
-                    },
-                  },
-                },
-              },
             },
           },
         },
       },
     },
   });
+  console.log(res?.businessBrandProducts);
+
   if (!res || res.type !== "dealer") {
     throw new Error("Dealer not found");
   }
@@ -533,45 +491,46 @@ export const getDealer = async (
       type: contact.type,
       value: contact.value,
     })),
-    products: res.businessProducts.map((businessProduct) => ({
-      name: businessProduct.product.name,
-      description: businessProduct.product.description,
-      image: businessProduct.product.image,
-      slug: businessProduct.product.slug,
-      brands: businessProduct.product.productBrands
-        .filter(
-          (productBrand) => productBrand.productId === businessProduct.productId
-        )
-        .map((productBrand) => ({
-          name: productBrand.brand.name,
-          description: productBrand.brand.description,
-          image: productBrand.brand.image,
-          slug: productBrand.brand.slug,
-        })),
-    })),
-    brands: res.businessBrands.map((businessBrand) => ({
-      name: businessBrand.brand.name,
-      description: businessBrand.brand.description,
-      image: businessBrand.brand.image,
-      slug: businessBrand.brand.slug,
-      products: businessBrand.brand.productBrands
-        .filter(
-          (productBrand) => productBrand.brandId === businessBrand.brandId
-        )
-        .map((productBrand) => ({
-          name: productBrand.product.name,
-          description: productBrand.product.description,
-          image: productBrand.product.image,
-          slug: productBrand.product.slug,
-        })),
-    })),
+    brands: res.businessBrandProducts.reduce((acc, businessBrandProduct) => {
+      const brandPresent = acc.findIndex(
+        (brand) => brand.slug === businessBrandProduct.brand.slug
+      );
+      if (brandPresent === -1) {
+        acc.push({
+          name: businessBrandProduct.brand.name,
+          description: businessBrandProduct.brand.description,
+          image: businessBrandProduct.brand.image,
+          slug: businessBrandProduct.brand.slug,
+          products: [
+            {
+              name: businessBrandProduct.product.name,
+              description: businessBrandProduct.product.description,
+              image: businessBrandProduct.product.image,
+              slug: businessBrandProduct.product.slug,
+            },
+          ],
+        });
+      } else {
+        acc[brandPresent].products.push({
+          name: businessBrandProduct.product.name,
+          description: businessBrandProduct.product.description,
+          image: businessBrandProduct.product.image,
+          slug: businessBrandProduct.product.slug,
+        });
+      }
+      return acc;
+    }, [] as Business<"dealer">["brands"]),
   };
   return dealer;
 };
 
-export const getBrands = async (db: DrizzleD1Database<typeof s>) => {
+export const getBrands = async (
+  db: DrizzleD1Database<typeof s>,
+  getid = false
+) => {
   const brands = await db.query.brands.findMany({
     columns: {
+      id: getid,
       name: true,
       description: true,
       image: true,
@@ -582,9 +541,13 @@ export const getBrands = async (db: DrizzleD1Database<typeof s>) => {
   return brands;
 };
 
-export const getProducts = async (db: DrizzleD1Database<typeof s>) => {
+export const getProducts = async (
+  db: DrizzleD1Database<typeof s>,
+  getid = false
+) => {
   const products = await db.query.products.findMany({
     columns: {
+      id: getid,
       name: true,
       description: true,
       image: true,
