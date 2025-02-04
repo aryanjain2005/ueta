@@ -107,7 +107,7 @@ const product = dealers.length > 0 && productSlug && dealers[0]?.product
         ) : (
           <div class='grid grid-cols-1 sm:grid-cols-2  gap-4'>
             {dealers.map((dealer) => (
-              <DDMoreInfo bussiness={dealer} />
+              <DDMoreInfo client:load bussiness={dealer} type='dealer' />
             ))}
           </div>
         )

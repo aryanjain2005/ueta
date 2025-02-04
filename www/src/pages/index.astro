@@ -13,7 +13,11 @@ const db = drizzle(env.DB, {
 })
 const brands = await getBrands(db)
 const products = await getProducts(db)
-
+// await db.insert(s.users).values({
+//   role: 'admin',
+//   username: 'p',
+//   password: 'p'
+// })
 Astro.response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=0')
 // @ts-ignore
 const user = Astro.locals.user
@@ -43,16 +47,30 @@ const user = Astro.locals.user
       type='product'
     />
     <div class='max-md:flex-col flex justify-between items-center gap-3 px-16'>
-      <a href='/dealer' class='grow bg-red-400 text-center h-20 p-3'>
-        <p>Dealers</p>
+      <a
+        href='/dealer'
+        class='grow text-center bg-black/70 h-20 p-3 relative min-w-[50vw] aspect-auto'>
+        <img
+          src='/media/business.jpeg'
+          class='w-full h-full absolute top-0 left-0 -z-10'
+        />
+
+        <p class='w-full h-full font-bold text-xl text-white'>Dealers</p>
       </a>
-      {
-        user && (
-          <a href='/distributor' class='grow bg-red-400 text-center h-20 p-3'>
-            <p>Distributor</p>
-          </a>
-        )
-      }
     </div>
+    {
+      user && (
+        <a
+          href='/Distributor'
+          class='grow text-center bg-black/70 h-20 p-3 relative min-w-[50vw] aspect-auto'>
+          <img
+            src='/media/business.jpeg'
+            class='w-full h-full absolute top-0 left-0 -z-10'
+          />
+
+          <p class='w-full h-full font-bold text-xl text-white'>Distributor</p>
+        </a>
+      )
+    }
   </Container>
 </Layout>

@@ -108,7 +108,11 @@ const product =
         ) : (
           <div class='grid grid-cols-1 sm:grid-cols-2  gap-4'>
             {distributors.map((distributor) => (
-              <DDMoreInfo bussiness={distributor} />
+              <DDMoreInfo
+                client:load
+                bussiness={distributor}
+                type='distributor'
+              />
             ))}
           </div>
         )

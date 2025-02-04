@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
 
 export const DDMoreInfo = ({
   bussiness,
+  type,
 }: {
   bussiness: {
     name: string;
@@ -15,12 +16,13 @@ export const DDMoreInfo = ({
       value: string;
     }[];
   };
+  type: "dealer" | "distributor";
 }) => {
   return (
     <Card
       onClick={() => {
         // redirect to the bussiness page
-        // which is
+        window.location.pathname = `/${type}/${bussiness.slug}`;
       }}
       className="w-full p-4">
       <div className="max-sm:flex-col flex gap-3 items-center p-3">
