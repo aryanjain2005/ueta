@@ -55,7 +55,8 @@
     "sharp": "^0.33.4",
     "tailwind-merge": "^2.5.5",
     "tailwindcss": "^3.4.3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "wrangler": "^3.107.2"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
