@@ -15,6 +15,20 @@
       "when": 1735668131758,
       "tag": "0001_wonderful_angel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1735910676722,
+      "tag": "0002_next_killmonger",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1735910773539,
+      "tag": "0003_married_echo",
+      "breakpoints": true
     }
   ]
 }
