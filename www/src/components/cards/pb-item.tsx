@@ -28,7 +28,7 @@ const PbItem = ({
       <div
         className={`flex items-center justify-center rounded-md ${
           size == "normal"
-            ? "w-[120px] h-[120px] sm:w-[160px] h-[160px]"
+            ? "w-[120px] h-[120px] md:w-[160px] md:h-[160px]"
             : "w-[100px] h-[100px] "
         }
           ${shadow ? "shadow-md p-2" : ""}`}>

@@ -57,20 +57,22 @@ const user = Astro.locals.user
 
         <p class='w-full h-full font-bold text-xl text-white'>Dealers</p>
       </a>
-    </div>
-    {
-      user && (
-        <a
-          href='/Distributor'
-          class='grow text-center bg-black/70 h-20 p-3 relative min-w-[50vw] aspect-auto'>
-          <img
-            src='/media/business.jpeg'
-            class='w-full h-full absolute top-0 left-0 -z-10'
-          />
+      {
+        user && (
+          <a
+            href='/Distributor'
+            class='grow text-center bg-black/70 h-20 p-3 relative min-w-[50vw] aspect-auto'>
+            <img
+              src='/media/business.jpeg'
+              class='w-full h-full absolute top-0 left-0 -z-10'
+            />
 
-          <p class='w-full h-full font-bold text-xl text-white'>Distributor</p>
-        </a>
-      )
-    }
+            <p class='w-full h-full font-bold text-xl text-white'>
+              Distributor
+            </p>
+          </a>
+        )
+      }
+    </div>
   </Container>
 </Layout>
